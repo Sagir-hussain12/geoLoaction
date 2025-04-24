@@ -1,8 +1,18 @@
 import React from 'react';
-import { formatDistance } from '../utils/locationUtils';
 import { MapPin } from 'lucide-react';
+import { formatDistance, calculateDistance } from '../utils/locationUtils';
 
-const OfferCard = ({ offer }) => {
+const OfferCard = ({ offer, userLocation }) => {
+  // Calculate distance safely
+  const distance = userLocation && offer.retailerLocation
+    ? calculateDistance(
+        userLocation.lat,
+        userLocation.lng,
+        offer.retailerLocation.lat,
+        offer.retailerLocation.lng
+      )
+    : offer.distanceKm || 0; // Fallback to mock distance or 0 if none exists
+
   return (
     <div className="flex-shrink-0 w-[170px] sm:w-[220px] bg-white rounded-lg shadow-md overflow-hidden transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
       {/* Image with discount tag */}
@@ -24,7 +34,7 @@ const OfferCard = ({ offer }) => {
           <span className="mx-1.5">•</span>
           <div className="flex items-center">
             <MapPin className="h-3 w-3 mr-0.5 text-gray-400" />
-            <span>{formatDistance(offer.distanceKm)}</span>
+            <span>{formatDistance(distance)}</span>
           </div>
         </div>
         

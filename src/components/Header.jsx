@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Search, ShoppingBag, Menu, Bell } from 'lucide-react';
+import { getCurrentLocation } from '../utils/locationUtils';
 
-const Header = ({ userLocation }) => {
+const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationError, setLocationError] = useState(null);
 
-  // Add scroll event listener
-  React.useEffect(() => {
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        console.log('Fetching user location...');
+        const location = await getCurrentLocation();
+        console.log('Location obtained:', location);
+        setUserLocation(location);
+      } catch (error) {
+        console.error('Error getting location:', error);
+        setLocationError(error.message);
+        // Set default location if there's an error
+        setUserLocation({
+          city: 'Loading...',
+          neighborhood: 'Location',
+          lat: 0,
+          lng: 0
+        });
+      }
+    };
+
+    fetchLocation();
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -45,7 +68,8 @@ const Header = ({ userLocation }) => {
         <div className="mt-2 flex items-center">
           <MapPin className={`h-5 w-5 mr-1 ${isScrolled ? 'text-blue-600' : 'text-blue-400'}`} />
           <div className={`text-sm font-medium ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
-            {userLocation.neighborhood}, {userLocation.city}
+            {userLocation ? `${userLocation.neighborhood}, ${userLocation.city}` : 'Getting location...'}
+            {locationError && <span className="text-xs text-red-400 ml-2">({locationError})</span>}
           </div>
         </div>
         

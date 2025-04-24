@@ -2,6 +2,19 @@ import React from 'react';
 import { Home, Search, Heart, ShoppingBag, User } from 'lucide-react';
 import Header from './Header';
 
+const NavButton = ({ icon, label, active = false }) => {
+  return (
+    <button className="flex flex-col items-center justify-center w-full">
+      <div className={`${active ? 'text-blue-600' : 'text-gray-500'}`}>
+        {icon}
+      </div>
+      <span className={`text-[10px] mt-1 ${active ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
+        {label}
+      </span>
+    </button>
+  );
+};
+
 const Layout = ({ children, userLocation }) => {
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
@@ -20,19 +33,6 @@ const Layout = ({ children, userLocation }) => {
         <NavButton icon={<User className="w-6 h-6" />} label="Profile" />
       </nav>
     </div>
-  );
-};
-
-const NavButton = ({ icon, label, active = false }) => {
-  return (
-    <button className="flex flex-col items-center justify-center w-full">
-      <div className={`${active ? 'text-blue-600' : 'text-gray-500'}`}>
-        {icon}
-      </div>
-      <span className={`text-[10px] mt-1 ${active ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
-        {label}
-      </span>
-    </button>
   );
 };
 

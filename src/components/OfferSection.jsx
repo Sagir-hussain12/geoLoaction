@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import OfferCard from './OfferCard';
 
-const OfferSection = ({ section }) => {
+const OfferSection = ({ section ,userLocation }) => {
   const scrollContainerRef = useRef(null);
   
   const scrollLeft = () => {
@@ -38,15 +38,11 @@ const OfferSection = ({ section }) => {
           <ChevronLeft className="h-5 w-5" />
         </button>
         
-        <div 
-          ref={scrollContainerRef}
-          className="flex overflow-x-auto gap-3 px-4 pb-2 scrollbar-hide scroll-smooth"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {section.offers.map(offer => (
-            <OfferCard key={offer.id} offer={offer} />
-          ))}
-        </div>
+        <div ref={scrollContainerRef} className="flex overflow-x-auto gap-3 px-4 pb-2 scrollbar-hide scroll-smooth">
+        {section.offers.map(offer => (
+          <OfferCard key={offer.id} offer={offer} userLocation={userLocation} />
+        ))}
+      </div>
         
         <button 
           onClick={scrollRight}
