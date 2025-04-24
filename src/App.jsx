@@ -9,6 +9,9 @@ import { getCurrentLocation, calculateDistance } from './utils/locationUtils';
 function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [sortedSections, setSortedSections] = useState(mockOfferSections);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredSections, setFilteredSections] = useState([]);
+
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -46,21 +49,45 @@ function App() {
     fetchLocation();
   }, []);
 
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = sortedSections.map(section => ({  // Use sortedSections instead of mockOfferSections
+        ...section,
+        offers: section.offers.filter(offer =>
+          offer.retailer.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      })).filter(section => section.offers.length > 0);
+      
+      setFilteredSections(filtered);
+    } else {
+      setFilteredSections(sortedSections);  // Use sortedSections here too
+    }
+  }, [searchQuery, sortedSections]);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+  };
+
   return (
-    <Layout userLocation={userLocation}>
+    <Layout userLocation={userLocation} onSearch={handleSearch}>
       <div className="animate-fadeIn">
         <CategoryScrollbar />
         <FeaturedBanner />
         
         {/* Offer Sections */}
         <div className="mt-3">
-          {sortedSections.map(section => (
+          {(searchQuery ? filteredSections : mockOfferSections).map(section => (
             <OfferSection 
               key={section.id} 
               section={section} 
               userLocation={userLocation} 
             />
           ))}
+          {searchQuery && filteredSections.length === 0 && (
+            <div className="text-center py-10 text-gray-500">
+              No retailers found matching "{searchQuery}"
+            </div>
+          )}
         </div>
       </div>
     </Layout>

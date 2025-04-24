@@ -15,10 +15,10 @@ const NavButton = ({ icon, label, active = false }) => {
   );
 };
 
-const Layout = ({ children, userLocation }) => {
+const Layout = ({ children, userLocation,onSearch  }) => {
   return (
     <div className="min-h-screen bg-gray-50 pb-16">
-      <Header userLocation={userLocation} />
+      <Header userLocation={userLocation} onSearch={onSearch} />
       
       <main className="pt-[150px] pb-14">
         {children}

@@ -1,34 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Search, ShoppingBag, Menu, Bell } from 'lucide-react';
-import { getCurrentLocation } from '../utils/locationUtils';
+import { MapPin, ShoppingBag, Menu, Bell, Search } from 'lucide-react';
 
-const Header = () => {
+const Header = ({ userLocation, onSearch }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [userLocation, setUserLocation] = useState(null);
-  const [locationError, setLocationError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(searchQuery);
+    }
+  };
+  console.log('Search query submitted:', searchQuery);
   useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        console.log('Fetching user location...');
-        const location = await getCurrentLocation();
-        console.log('Location obtained:', location);
-        setUserLocation(location);
-      } catch (error) {
-        console.error('Error getting location:', error);
-        setLocationError(error.message);
-        // Set default location if there's an error
-        setUserLocation({
-          city: 'Loading...',
-          neighborhood: 'Location',
-          lat: 0,
-          lng: 0
-        });
-      }
-    };
-
-    fetchLocation();
-
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -65,23 +49,28 @@ const Header = () => {
         </div>
         
         {/* Location Row */}
-        <div className="mt-2 flex items-center">
-          <MapPin className={`h-5 w-5 mr-1 ${isScrolled ? 'text-blue-600' : 'text-blue-400'}`} />
-          <div className={`text-sm font-medium ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
-            {userLocation ? `${userLocation.neighborhood}, ${userLocation.city}` : 'Getting location...'}
-            {locationError && <span className="text-xs text-red-400 ml-2">({locationError})</span>}
+        {userLocation && (
+          <div className="mt-2 flex items-center">
+            <MapPin className={`h-5 w-5 mr-1 ${isScrolled ? 'text-blue-600' : 'text-blue-400'}`} />
+            <div className={`text-sm font-medium ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
+              {userLocation.neighborhood}, {userLocation.city}
+            </div>
           </div>
-        </div>
+        )}
         
         {/* Search Bar */}
-        <div className="mt-3 relative">
+        <form onSubmit={handleSearch} className="mt-3 relative flex">
           <input
             type="text"
             placeholder="Search for stores, products, deals..."
             className="w-full bg-white/90 rounded-full py-2 pl-10 pr-4 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-        </div>
+          <button type="submit" className='absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600'>
+            Search
+          </button>
+        </form>
       </div>
     </header>
   );
