@@ -14,7 +14,7 @@ export const getCurrentLocation = () => {
             // Try to get address details
             try {
               const response = await fetch(
-                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyByun5HvChv0aCU4vM0At_iPgu1DtcqNU4`
+                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyByun5HvChv0aCU4vM0At_iPgu1DtcqNU`
               );
               
               if (!response.ok) {
