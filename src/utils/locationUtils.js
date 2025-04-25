@@ -9,12 +9,11 @@ export const getCurrentLocation = () => {
         async (position) => {
           try {
             const { latitude: lat, longitude: lng } = position.coords;
-            console.log('Raw coordinates:', { lat, lng });
             
             // Try to get address details
             try {
               const response = await fetch(
-                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&${import.meta.env.VITE_API_KEY}`
+                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&${import.meta.env.API_KEY}`
               );
               
               if (!response.ok) {
@@ -22,7 +21,6 @@ export const getCurrentLocation = () => {
               }
               
               const data = await response.json();
-              console.log('Geocoding API response:', data);
               
               if (data.results && data.results.length > 0) {
                 const address = data.results[0].address_components;
@@ -44,7 +42,6 @@ export const getCurrentLocation = () => {
                 });
               }
             } catch (geocodeError) {
-              console.error('Geocoding error, using coordinates only:', geocodeError);
               resolve({
                 city: 'Nearby',
                 neighborhood: 'Your Location',
@@ -57,7 +54,6 @@ export const getCurrentLocation = () => {
           }
         },
         (error) => {
-          console.error('Geolocation error:', error);
           let errorMessage;
           switch(error.code) {
             case error.PERMISSION_DENIED:

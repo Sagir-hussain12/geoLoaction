@@ -74,7 +74,7 @@ export const mockOfferSections = [
 
 
       {
-        id: "near-11",
+        id: "near-12",
         title: "10% Off All Sushi",
         retailer: "Tokyo Kitchen",
         retailerLocation: { lat: 12.9716, lng: 77.5946 }, // Bangalore
